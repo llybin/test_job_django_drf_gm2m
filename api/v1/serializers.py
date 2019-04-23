@@ -87,7 +87,7 @@ class ManyContentRelatedField(serializers.ManyRelatedField):
         for x in data:
             content.setdefault(x['type'], set()).add(x['id'])
 
-        increase_content_counter(content)
+        increase_content_counter.delay(content)
 
         return data
 
