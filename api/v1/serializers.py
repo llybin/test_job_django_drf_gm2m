@@ -82,8 +82,13 @@ class ContentRelatedField(serializers.Field):
 class ManyContentRelatedField(serializers.ManyRelatedField):
     def to_representation(self, value):
         data = super().to_representation(value)
-        content = tuple((x['id'], x['type']) for x in data)
-        increase_content_counter.delay(content)
+
+        content = {}
+        for x in data:
+            content.setdefault(x['type'], set()).add(x['id'])
+
+        increase_content_counter(content)
+
         return data
 
 

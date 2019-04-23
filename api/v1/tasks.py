@@ -1,21 +1,20 @@
 import logging
 
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import F
 from django.db import transaction
 
-
 from project.celeryconf import app
-from base.models import PageContent
 
 
 logger = logging.getLogger(__name__)
 
 
 @app.task(queue='content_counter')
-def increase_content_counter(content: tuple):
+def increase_content_counter(content: dict):
     with transaction.atomic():
-        for i, t in content:
-            logger.info(f"Content, id: {i}, type: {t}, increasing counter")
-            pc = PageContent.objects.filter(object_id=i, content_type__app_label='base', content_type__model=t).first()
-            pc.content_object.counter = F('counter') + 1
-            pc.content_object.save()
+        for t, ids in content.items():
+            logger.info(f"Content type: {t}, for ids: {ids} increasing counter")
+            model_type = ContentType.objects.get(app_label='base', model=t)
+            model = model_type.model_class()
+            model.objects.filter(id__in=ids).update(counter=F('counter') + 1)

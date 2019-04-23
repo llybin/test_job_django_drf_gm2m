@@ -10,23 +10,24 @@ class CounterTest(TestCase):
     ]
 
     def test_empty_list(self):
-        increase_content_counter(())
+        increase_content_counter({})
         self.assertTrue(True)
 
     def test_ok(self):
         page = Page.objects.get(id=1)
 
-        content = page.content.all()
-        self.assertEqual(len(content), 4)
+        data = page.content.all()
+        self.assertEqual(len(data), 4)
 
         counters = {}
-
-        for x in content:
+        content = {}
+        for x in data:
             counters[(x.content_object.id, str(x.content_type))] = x.content_object.counter
+            content.setdefault(x.content_type, set()).add(x.content_object.id)
 
-        increase_content_counter(tuple(counters.keys()))
+        increase_content_counter(content)
 
-        for x in content:
+        for x in data:
             x.content_object.refresh_from_db()
 
             self.assertIn((x.content_object.id, str(x.content_type)), counters)
