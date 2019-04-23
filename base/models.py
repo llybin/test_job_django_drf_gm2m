@@ -1,5 +1,3 @@
-from functools import reduce
-
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import fields
 from django.db import models
@@ -18,14 +16,9 @@ class Page(models.Model):
         return self.title
 
 
-content_type_limit = reduce(
-    lambda a, b: a | b,
-    [
-        models.Q(app_label='base', model='text'),
-        models.Q(app_label='base', model='video'),
-    ],
-    models.Q(app_label='base', model='audio')
-)
+content_type_limit = models.Q(app_label='base', model='audio') | \
+                     models.Q(app_label='base', model='text') | \
+                     models.Q(app_label='base', model='video')
 
 
 class PageContent(models.Model):
