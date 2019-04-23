@@ -5,6 +5,8 @@ Django, DRF, celery, generic many-to-many, docker, docker-compose
 
 See test.pdf
 
+[Variant non-generic](https://github.com/llybin/test_job_django_drf_m2m)
+
 File fixtures
 -
 
