@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-celery = {version = "==4.2.1", extras = ["redis"]}
+celery = {version = "==4.2.1",extras = ["redis"]}
 django = "==2.1.7"
 djangorestframework = "==3.9.1"
 psycopg2-binary = "==2.7.7"

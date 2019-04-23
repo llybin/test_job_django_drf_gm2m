@@ -35,6 +35,9 @@ class PageContent(models.Model):
     class Meta:
         ordering = ('-order',)
 
+    def __str__(self):
+        return f"{self.page.title}: {self.content_type.name} - {self.content_object}"
+
 
 class ContentMixin(models.Model):
     counter = models.PositiveIntegerField(default=0)

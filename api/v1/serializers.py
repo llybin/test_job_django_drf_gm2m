@@ -75,7 +75,7 @@ class ContentRelatedField(serializers.Field):
             raise Exception('Unexpected type of object')
 
         data = serializer.data
-        data['type'] = str(value.content_type)
+        data['type'] = value.content_type.name
         return data
 
 

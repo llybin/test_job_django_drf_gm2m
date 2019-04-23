@@ -19,16 +19,15 @@ class CounterTest(TestCase):
         data = page.content.all()
         self.assertEqual(len(data), 4)
 
-        counters = {}
-        content = {}
+        counters = content = {}
         for x in data:
-            counters[(x.content_object.id, str(x.content_type))] = x.content_object.counter
-            content.setdefault(x.content_type, set()).add(x.content_object.id)
+            counters[(x.content_object.id, str(x.content_type.name))] = x.content_object.counter
+            content.setdefault(x.content_type.name, set()).add(x.content_object.id)
 
         increase_content_counter(content)
 
         for x in data:
             x.content_object.refresh_from_db()
 
-            self.assertIn((x.content_object.id, str(x.content_type)), counters)
-            self.assertEqual(x.content_object.counter, counters[(x.content_object.id, str(x.content_type))] + 1)
+            self.assertIn((x.content_object.id, x.content_type.name), counters)
+            self.assertEqual(x.content_object.counter, counters[(x.content_object.id, x.content_type.name)] + 1)
